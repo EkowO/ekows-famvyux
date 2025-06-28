@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Movie Site{% endblock %}</title>
+    <!-- Add your CSS links here -->
+</head>
+<body>
+    <nav>
+        <!-- Your homepage header/navbar code here -->
+        <a href="{{ url_for('index') }}">Home</a>
+        <!-- Example: -->
+        {% if username %}
+            <form method="post" action="{{ url_for('logout') }}" style="display:inline;">
+                <button type="submit">Sign out</button>
+            </form>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

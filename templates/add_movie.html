@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Movie</title>
+</head>
+<body>
+    <h1>Add a New Movie</h1>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description"></textarea><br><br>
+        <button type="submit">Add Movie</button>
+    </form>
+    <a href="{{ url_for('index') }}">Back to movies</a>
+</body>
+</html>
+{% extends "base.html" %}
+{% block title %}Home - My Movie Site{% endblock %}
+{% block content %}
+<!-- Your homepage content here -->
+{% endblock %}

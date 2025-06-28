@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.Title }} - Details</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="/" style="color:#f5c518;">&larr; Back to Home</a>
+        </div>
+    </header>
+    <main class="container" style="margin-top:30px;">
+        <div class="movie-detail-card" style="display:flex;gap:30px;align-items:flex-start;">
+            <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster" style="max-width:300px;">
+            <div>
+                <h2>{{ movie.Title }} ({{ movie.Year }})</h2>
+                <p><strong>IMDb Rating:</strong> {{ movie.imdbRating or "N/A" }}</p>
+                <p><strong>Rated:</strong> {{ movie.Rated or "N/A" }}</p>
+                <p><strong>Genre:</strong> {{ movie.Genre or "N/A" }}</p>
+                <p><strong>Director:</strong> {{ movie.Director }}</p>
+                <p><strong>Actors:</strong> {{ movie.Actors }}</p>
+                <p><strong>Plot:</strong> {{ movie.Plot }}</p>
+                <p><strong>Awards:</strong> {{ movie.Awards }}</p>
+                <p><strong>Box Office:</strong> {{ movie.BoxOffice }}</p>
+                <p><strong>Language:</strong> {{ movie.Language }}</p>
+                <p><strong>Country:</strong> {{ movie.Country }}</p>
+            </div>
+        </div>
+        <form action="/save_movie" method="post">
+            <input type="hidden" name="movie_id" value="{{ movie.imdbID }}">
+            <button type="submit">Like Movie</button>
+        </form>
+        <form action="/watch_later/{{ movie.imdbID }}" method="post" style="display:inline;/ ">
+            <button type="submit">Watch Later</button>
+        </form>
+        <h3>Comments</h3>
+        <ul>
+          {% for comment in comments %}
+            <li><strong>{{ comment.user }}:</strong> {{ comment.text }}</li>
+          {% else %}
+            <li>No comments yet.</li>
+          {% endfor %}
+        </ul>
+
+        {% if username %}
+          <form method="post" action="{{ url_for('add_comment', movie_id=movie.id) }}">
+            <textarea name="comment" required placeholder="Add a comment..." rows="3" cols="40"></textarea><br>
+            <button type="submit">Post Comment</button>
+          </form>
+        {% else %}
+          <p><a href="{{ url_for('login') }}">Log in</a> to comment.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

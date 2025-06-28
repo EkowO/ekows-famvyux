@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liked Movies</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>❤️ Liked Movies</h1>
+        {% if liked_movies %}
+            <ul class="movie-list">
+            {% for movie in liked_movies %}
+                <li class="movie-item">
+                    <a href="/movie/{{ movie.imdbID }}">
+                        <img src="{{ movie.Poster if movie.Poster and movie.Poster != 'N/A' else '/static/no-poster.png' }}" alt="{{ movie.Title }} poster" class="movie-poster">
+                    </a>
+                    <a href="/movie/{{ movie.imdbID }}" class="movie-title">{{ movie.Title }}</a>
+                    <div class="movie-rating">{{ movie.imdbRating }}</div>
+                    <form action="/remove_liked/{{ movie.imdbID }}" method="post" style="display:inline;">
+                        <button type="submit" class="button remove">Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">No liked movies yet.</p>
+        {% endif %}
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>

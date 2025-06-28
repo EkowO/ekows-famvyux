@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Rated Movies for Children</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/liked">View Liked Movies</a></li>
+                <li><a href="/watch_later">Watch Later</a></li>
+            </ul>
+            {% if username %}
+                <form method="post" action="{{ url_for('logout') }}" style="display:inline;">
+                    <button type="submit" class="btn btn-primary navbar-btn">Sign out</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary navbar-btn">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <section id="search" class="search-section">
+        <div class="container">
+            <form method="get" action="/">
+                <input type="text" name="q" placeholder="Search for a movie title..." class="search-input" value="{{ search_query }}">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Main Content: Genres and Movies -->
+    <main id="genres" class="main-content">
+        {% if top_movies_by_genre %}
+            {% for genre, movies in top_movies_by_genre.items() %}
+                <section class="genre-section">
+                    <h2>{{ genre }}</h2>
+                    <div class="movies-row">
+                        {% for movie in movies %}
+                            <a href="/movie/{{ movie.imdbID }}" class="movie-link">
+                                <div class="movie-card">
+                                    <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster">
+                                    <h3>{{ movie.Title }}</h3>
+                                    <div class="movie-meta">
+                                        <span class="movie-rating">{{ movie.imdbRating }}</span>
+                                        <span class="movie-year">{{ movie.Year }}</span>
+                                    </div>
+                                    <div class="movie-plot">{{ movie.Plot }}</div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endfor %}
+        {% else %}
+            <div class="container">
+                <p style="text-align:center; margin-top:40px;">No movies found for your search.</p>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer" id="about">
+        <div class="container">
+            <p>&copy; 2025 Movie Suggestions for Kids. Made with FastAPI & Jinja2.</p>
+        </div>
+    </footer>
+</body>
+</html>
