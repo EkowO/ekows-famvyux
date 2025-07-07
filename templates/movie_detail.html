@@ -44,7 +44,7 @@
         </ul>
 
         {% if username %}
-          <form method="post" action="{{ url_for('add_comment', movie_id=movie.id) }}">
+          <form method="post" action="{{ url_for('add_comment', movie_id=movie.imdbID) }}">
             <textarea name="comment" required placeholder="Add a comment..." rows="3" cols="40"></textarea><br>
             <button type="submit">Post Comment</button>
           </form>
