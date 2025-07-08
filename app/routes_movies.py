@@ -22,7 +22,7 @@ async def home(request: Request, q: str = ""):
             "search_results.html",
             {"request": request, "found_movies": found_movies, "search_query": q}
         )
-    username = request.session.get("username") if "session" in request.scope else None
+    username = request.session.get("username")
     return templates.TemplateResponse(
         "index.html",
         {"request": request, "username": username, "top_movies_by_genre": final_top_movies_by_genre, "search_query": ""}
@@ -37,7 +37,7 @@ async def movie_detail(request: Request, imdb_id: str):
     from .utils import load_comments
     comments = load_comments()
     movie_comments = comments.get(imdb_id, [])
-    username = request.session.get("username") if "session" in request.scope else None
+    username = request.session.get("username")
     return templates.TemplateResponse(
         "movie_detail.html",
         {

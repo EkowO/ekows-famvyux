@@ -7,7 +7,7 @@ router = APIRouter()
 @router.post("/movie/{movie_id}/comment")
 async def add_comment(request: Request, movie_id: str, comment: str = Form(...)):
     comments = load_comments()
-    username = request.session.get("username") if "session" in request.scope else None
+    username = request.session.get("username")
     if not username:
         return RedirectResponse(url="/login", status_code=303)
     movie_comments = comments.get(movie_id, [])

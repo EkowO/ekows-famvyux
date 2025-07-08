@@ -17,9 +17,7 @@
                 <li><a href="/watch_later">Watch Later</a></li>
             </ul>
             {% if username %}
-                <form method="post" action="{{ url_for('logout') }}" style="display:inline;">
-                    <button type="submit" class="btn btn-primary navbar-btn">Sign out</button>
-                </form>
+                <span class="username-display">Welcome, {{ username }}</span>
             {% else %}
                 <a href="{{ url_for('login') }}" class="btn btn-primary navbar-btn">Login</a>
             {% endif %}

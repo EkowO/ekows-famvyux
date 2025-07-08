@@ -9,7 +9,7 @@ templates = Jinja2Templates(directory="templates")
 @router.post("/watch_later/{imdb_id}")
 async def watch_later_movie(request: Request, imdb_id: str):
     watch_later = load_watch_later()
-    username = request.session.get("username") if "session" in request.scope else None
+    username = request.session.get("username")
     if not username:
         return RedirectResponse(url="/login", status_code=303)
     user_list = watch_later.get(username, [])
@@ -23,7 +23,7 @@ async def watch_later_movie(request: Request, imdb_id: str):
 @router.post("/remove_watch_later/{imdb_id}")
 async def remove_watch_later(request: Request, imdb_id: str):
     watch_later = load_watch_later()
-    username = request.session.get("username") if "session" in request.scope else None
+    username = request.session.get("username")
     if not username:
         return RedirectResponse(url="/login", status_code=303)
     user_list = watch_later.get(username, [])
@@ -37,7 +37,7 @@ async def remove_watch_later(request: Request, imdb_id: str):
 @router.get("/watch_later", response_class=HTMLResponse)
 async def show_watch_later(request: Request):
     watch_later = load_watch_later()
-    username = request.session.get("username") if "session" in request.scope else None
+    username = request.session.get("username")
     if not username:
         return RedirectResponse(url="/login", status_code=303)
     user_list = watch_later.get(username, [])
