@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Watch Later Movies</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Watch Later Movies{% endblock %}
+
+{% block content %}
     <div class="container">
         <h1>🎬 Watch Later Movies</h1>
         {% if watch_later_movies %}
@@ -27,5 +25,4 @@
         {% endif %}
         <a href="/" class="back-link">← Back to Home</a>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ movie.Title }} - Details</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-    <header class="main-header">
-        <div class="container">
-            <a href="/" style="color:#f5c518;">&larr; Back to Home</a>
-        </div>
-    </header>
-    <main class="container" style="margin-top:30px;">
+{% extends "base.html" %}
+
+{% block title %}{{ movie.Title }} - Details{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top:30px;">
         <div class="movie-detail-card" style="display:flex;gap:30px;align-items:flex-start;">
             <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster" style="max-width:300px;">
             <div>
@@ -51,6 +44,5 @@
         {% else %}
           <p><a href="/login">Log in</a> to comment.</p>
         {% endif %}
-    </main>
-</body>
-</html>
+    </div>
+{% endblock %}

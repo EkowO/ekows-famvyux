@@ -1,39 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Top Rated Movies for Children</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-    
+{% extends "base.html" %}
 
-    <!-- Navbar -->
-    <nav class="navbar">
+{% block title %}Top Rated Movies for Children{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero-section">
         <div class="container">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/liked">View Liked Movies</a></li>
-                <li><a href="/watch_later">Watch Later</a></li>
-            </ul>
-            {% if username %}
-                <span class="username-display">Welcome, {{ username }}</span>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="btn btn-primary navbar-btn">Login</a>
-            {% endif %}
+            <h1 class="hero-title">Discover Amazing Movies</h1>
+            <p class="hero-subtitle">Explore our collection of top-rated films</p>
         </div>
-    </nav>
-
-    <!-- Search Section -->
-    <section id="search" class="search-section">
-        <div class="container">
-            <form method="get" action="/">
-                <input type="text" name="q" placeholder="Search for a movie title..." class="search-input" value="{{ search_query }}">
-                <button type="submit" class="search-btn">Search</button>
-            </form>
-        </div>
-    </section>
-
     <!-- Main Content: Genres and Movies -->
     <main id="genres" class="main-content">
         {% if top_movies_by_genre %}
@@ -70,5 +45,4 @@
             <p>&copy; 2025 Movie Suggestions for Kids. Made with FastAPI & Jinja2.</p>
         </div>
     </footer>
-</body>
-</html>
+{% endblock %}
