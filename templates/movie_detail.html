@@ -37,19 +37,19 @@
         <h3>Comments</h3>
         <ul>
           {% for comment in comments %}
-            <li><strong>{{ comment.user }}:</strong> {{ comment.text }}</li>
+            <li><strong>{{ comment.user }}:</strong> {{ comment.comment }}</li>
           {% else %}
             <li>No comments yet.</li>
           {% endfor %}
         </ul>
 
         {% if username %}
-          <form method="post" action="{{ url_for('add_comment', movie_id=movie.imdbID) }}">
+          <form method="post" action="/movie/{{ movie.imdbID }}/comment">
             <textarea name="comment" required placeholder="Add a comment..." rows="3" cols="40"></textarea><br>
             <button type="submit">Post Comment</button>
           </form>
         {% else %}
-          <p><a href="{{ url_for('login') }}">Log in</a> to comment.</p>
+          <p><a href="/login">Log in</a> to comment.</p>
         {% endif %}
     </main>
 </body>
