@@ -35,7 +35,8 @@ async def movie_detail(request: Request, imdb_id: str):
     movies = load_movies()
     movie = next((m for m in movies if str(m.get('imdbID')) == str(imdb_id)), None)
     if not movie:
-        return templates.TemplateResponse("movie_not_found.html", {"request": request}, status_code=404)
+        username = request.session.get("username")
+        return templates.TemplateResponse("movie_not_found.html", {"request": request, "username": username, "search_query": ""}, status_code=404)
     from .utils import load_comments
     comments = load_comments()
     movie_comments = comments.get(imdb_id, [])
