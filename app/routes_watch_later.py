@@ -46,5 +46,5 @@ async def show_watch_later(request: Request):
     watch_later_movies = [m for m in all_unique_movies.values() if m.get("imdbID") in user_list]
     return templates.TemplateResponse(
         "watch_later.html",
-        {"request": request, "watch_later_movies": watch_later_movies}
+        {"request": request, "watch_later_movies": watch_later_movies, "username": username, "search_query": ""}
     )

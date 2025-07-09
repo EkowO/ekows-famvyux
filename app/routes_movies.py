@@ -16,16 +16,18 @@ async def home(request: Request, q: str = ""):
     all_unique_movies = get_all_unique_movies(movies)
     child_unique_movies = get_child_unique_movies(movies)
     final_top_movies_by_genre = get_final_top_movies_by_genre(child_unique_movies)
+    username = request.session.get("username")
+    
     if q:
         found_movies = search_movies(q, all_unique_movies)
         return templates.TemplateResponse(
             "search_results.html",
-            {"request": request, "found_movies": found_movies, "search_query": q}
+            {"request": request, "found_movies": found_movies, "search_query": q, "username": username}
         )
-    username = request.session.get("username")
+    
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "username": username, "top_movies_by_genre": final_top_movies_by_genre, "search_query": ""}
+        {"request": request, "username": username, "top_movies_by_genre": final_top_movies_by_genre, "search_query": q}
     )
 
 @router.get("/movie/{imdb_id}", response_class=HTMLResponse)
@@ -45,6 +47,7 @@ async def movie_detail(request: Request, imdb_id: str):
             "movie": movie,
             "comments": movie_comments,
             "username": username,
+            "search_query": ""
         }
     )
 
@@ -114,7 +117,8 @@ async def view_liked_movies(request: Request):
     movies = load_movies()
     all_unique_movies = get_all_unique_movies(movies)
     liked_movies = [m for m in all_unique_movies.values() if m.get("imdbID") in liked_ids]
+    username = request.session.get("username")
     return templates.TemplateResponse(
         "liked_movies.html",
-        {"request": request, "liked_movies": liked_movies}
+        {"request": request, "liked_movies": liked_movies, "username": username, "search_query": ""}
     )
