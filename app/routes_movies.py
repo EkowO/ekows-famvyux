@@ -46,6 +46,10 @@ async def movie_detail(request: Request, imdb_id: str):
         if 'timestamp' in comment:
             comment['formatted_timestamp'] = format_timestamp(comment['timestamp'])
     
+    # Check if movie is liked
+    likes = load_likes()
+    is_liked = imdb_id in likes
+    
     username = request.session.get("username")
     return templates.TemplateResponse(
         "movie_detail.html",
@@ -54,7 +58,8 @@ async def movie_detail(request: Request, imdb_id: str):
             "movie": movie,
             "comments": movie_comments,
             "username": username,
-            "search_query": ""
+            "search_query": "",
+            "is_liked": is_liked
         }
     )
 
@@ -129,3 +134,12 @@ async def view_liked_movies(request: Request):
         "liked_movies.html",
         {"request": request, "liked_movies": liked_movies, "username": username, "search_query": ""}
     )
+
+@router.post("/remove_liked/{movie_id}")
+async def remove_liked_movie(request: Request, movie_id: str):
+    """Remove a movie from the liked movies list"""
+    likes = load_likes()
+    if movie_id in likes:
+        del likes[movie_id]
+        save_likes(likes)
+    return RedirectResponse(url="/liked", status_code=303)

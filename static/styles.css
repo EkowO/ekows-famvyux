@@ -698,3 +698,67 @@ form {
 .comment-form button:hover {
     background: #e6b800;
 }
+
+/* Movie Actions */
+.movie-actions {
+    margin: 20px 0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.button.like {
+    background: #f5c518;
+    color: #000;
+}
+
+.button.like:hover {
+    background: #e6b800;
+    transform: translateY(-1px);
+}
+
+.button.unlike {
+    background: #e74c3c;
+    color: white;
+}
+
+.button.unlike:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+.button.watch-later {
+    background: #3498db;
+    color: white;
+}
+
+.button.watch-later:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
+.button.remove {
+    background: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8em;
+}
+
+.button.remove:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}

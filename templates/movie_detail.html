@@ -20,13 +20,21 @@
                 <p><strong>Country:</strong> {{ movie.Country }}</p>
             </div>
         </div>
-        <form action="/save_movie" method="post">
-            <input type="hidden" name="movie_id" value="{{ movie.imdbID }}">
-            <button type="submit">Like Movie</button>
-        </form>
-        <form action="/watch_later/{{ movie.imdbID }}" method="post" style="display:inline;/ ">
-            <button type="submit">Watch Later</button>
-        </form>
+        <div class="movie-actions" style="margin: 20px 0; display: flex; gap: 10px;">
+            {% if is_liked %}
+                <form action="/remove_liked/{{ movie.imdbID }}" method="post" style="display:inline;">
+                    <button type="submit" class="button unlike">❤️ Unlike Movie</button>
+                </form>
+            {% else %}
+                <form action="/save_movie" method="post" style="display:inline;">
+                    <input type="hidden" name="movie_id" value="{{ movie.imdbID }}">
+                    <button type="submit" class="button like">🤍 Like Movie</button>
+                </form>
+            {% endif %}
+            <form action="/watch_later/{{ movie.imdbID }}" method="post" style="display:inline;">
+                <button type="submit" class="button watch-later">📋 Watch Later</button>
+            </form>
+        </div>
         <div class="comments-section">
             <h3>Comments</h3>
             <ul class="comments-list">
