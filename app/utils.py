@@ -117,3 +117,33 @@ def search_movies(query, all_unique_movies):
         if query in m.get("Title", "").lower():
             found_movies.append(m)
     return found_movies
+
+def format_timestamp(timestamp_str):
+    """Format timestamp to be more user-friendly"""
+    from datetime import datetime
+    try:
+        dt = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+        now = datetime.now()
+        diff = now - dt
+        
+        if diff.days > 0:
+            if diff.days == 1:
+                return "1 day ago"
+            elif diff.days < 7:
+                return f"{diff.days} days ago"
+            elif diff.days < 30:
+                weeks = diff.days // 7
+                return f"{weeks} week{'s' if weeks > 1 else ''} ago"
+            else:
+                months = diff.days // 30
+                return f"{months} month{'s' if months > 1 else ''} ago"
+        elif diff.seconds > 3600:
+            hours = diff.seconds // 3600
+            return f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif diff.seconds > 60:
+            minutes = diff.seconds // 60
+            return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            return "Just now"
+    except:
+        return timestamp_str

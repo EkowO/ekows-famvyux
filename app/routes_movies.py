@@ -37,9 +37,15 @@ async def movie_detail(request: Request, imdb_id: str):
     if not movie:
         username = request.session.get("username")
         return templates.TemplateResponse("movie_not_found.html", {"request": request, "username": username, "search_query": ""}, status_code=404)
-    from .utils import load_comments
+    from .utils import load_comments, format_timestamp
     comments = load_comments()
     movie_comments = comments.get(imdb_id, [])
+    
+    # Format timestamps for display
+    for comment in movie_comments:
+        if 'timestamp' in comment:
+            comment['formatted_timestamp'] = format_timestamp(comment['timestamp'])
+    
     username = request.session.get("username")
     return templates.TemplateResponse(
         "movie_detail.html",

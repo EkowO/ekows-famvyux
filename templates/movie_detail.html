@@ -27,22 +27,36 @@
         <form action="/watch_later/{{ movie.imdbID }}" method="post" style="display:inline;/ ">
             <button type="submit">Watch Later</button>
         </form>
-        <h3>Comments</h3>
-        <ul>
-          {% for comment in comments %}
-            <li><strong>{{ comment.user }}:</strong> {{ comment.comment }}</li>
-          {% else %}
-            <li>No comments yet.</li>
-          {% endfor %}
-        </ul>
+        <div class="comments-section">
+            <h3>Comments</h3>
+            <ul class="comments-list">
+              {% for comment in comments %}
+                <li class="comment-item">
+                  <div class="comment-user">{{ comment.user }}</div>
+                  <div class="comment-text">{{ comment.comment }}</div>
+                  {% if comment.formatted_timestamp %}
+                    <div class="comment-timestamp">
+                      {{ comment.formatted_timestamp }}
+                    </div>
+                  {% elif comment.timestamp %}
+                    <div class="comment-timestamp">
+                      {{ comment.timestamp }}
+                    </div>
+                  {% endif %}
+                </li>
+              {% else %}
+                <li class="comment-item">No comments yet.</li>
+              {% endfor %}
+            </ul>
 
-        {% if username %}
-          <form method="post" action="/movie/{{ movie.imdbID }}/comment">
-            <textarea name="comment" required placeholder="Add a comment..." rows="3" cols="40"></textarea><br>
-            <button type="submit">Post Comment</button>
-          </form>
-        {% else %}
-          <p><a href="/login">Log in</a> to comment.</p>
-        {% endif %}
+            {% if username %}
+              <form method="post" action="/movie/{{ movie.imdbID }}/comment" class="comment-form">
+                <textarea name="comment" required placeholder="Add a comment..." rows="3"></textarea>
+                <button type="submit">Post Comment</button>
+              </form>
+            {% else %}
+              <p><a href="/login">Log in</a> to comment.</p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
