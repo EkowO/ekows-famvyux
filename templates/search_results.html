@@ -4,8 +4,40 @@
 
 {% block content %}
     <div class="container" style="margin-top:30px;">
-        <h1>Search Results for "{{ search_query }}"</h1>
+        <h1>
+            {% if search_query %}
+                Search Results for "{{ search_query }}"
+            {% else %}
+                Filtered Results
+            {% endif %}
+        </h1>
+        
+        {% if current_filters %}
+            <div class="active-filters">
+                <span>Active filters:</span>
+                {% if current_filters.genre %}
+                    <span class="filter-tag">Genre: {{ current_filters.genre }}</span>
+                {% endif %}
+                {% if current_filters.rated %}
+                    <span class="filter-tag">Rating: {{ current_filters.rated }}</span>
+                {% endif %}
+                {% if current_filters.min_rating %}
+                    <span class="filter-tag">Min IMDB: {{ current_filters.min_rating }}</span>
+                {% endif %}
+                {% if current_filters.max_rating %}
+                    <span class="filter-tag">Max IMDB: {{ current_filters.max_rating }}</span>
+                {% endif %}
+                {% if current_filters.year_from %}
+                    <span class="filter-tag">From: {{ current_filters.year_from }}</span>
+                {% endif %}
+                {% if current_filters.year_to %}
+                    <span class="filter-tag">To: {{ current_filters.year_to }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
+        
         {% if found_movies %}
+            <p class="results-count">Found {{ found_movies|length }} movie(s)</p>
             <div class="movies-row">
                 {% for movie in found_movies %}
                     <a href="/movie/{{ movie.imdbID }}" class="movie-link">
@@ -15,14 +47,27 @@
                             <div class="movie-meta">
                                 <span class="movie-rating">{{ movie.imdbRating }}</span>
                                 <span class="movie-year">{{ movie.Year }}</span>
+                                {% if movie.Rated %}
+                                    <span class="movie-rated">{{ movie.Rated }}</span>
+                                {% endif %}
                             </div>
+                            {% if movie.Genre %}
+                                <div class="movie-genre">{{ movie.Genre }}</div>
+                            {% endif %}
                             <div class="movie-plot">{{ movie.Plot }}</div>
                         </div>
                     </a>
                 {% endfor %}
             </div>
         {% else %}
-            <p class="empty-message">No movies found for "{{ search_query }}".</p>
+            <p class="empty-message">
+                {% if search_query %}
+                    No movies found for "{{ search_query }}"
+                {% else %}
+                    No movies match the selected filters
+                {% endif %}
+                . Try adjusting your search criteria.
+            </p>
         {% endif %}
     </div>
 {% endblock %}

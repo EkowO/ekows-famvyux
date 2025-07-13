@@ -7,8 +7,38 @@
     <section class="hero-section">
         <div class="container">
             <h1 class="hero-title">Discover Amazing Movies</h1>
-            <p class="hero-subtitle">Explore our collection of top-rated films</p>
+            <p class="hero-subtitle">
+                {% if is_filtered %}
+                    Showing filtered results
+                {% else %}
+                    Explore our collection of top-rated films
+                {% endif %}
+            </p>
+            {% if is_filtered and current_filters %}
+                <div class="active-filters">
+                    <span>Active filters:</span>
+                    {% if current_filters.genre %}
+                        <span class="filter-tag">Genre: {{ current_filters.genre }}</span>
+                    {% endif %}
+                    {% if current_filters.rated %}
+                        <span class="filter-tag">Rating: {{ current_filters.rated }}</span>
+                    {% endif %}
+                    {% if current_filters.min_rating %}
+                        <span class="filter-tag">Min IMDB: {{ current_filters.min_rating }}</span>
+                    {% endif %}
+                    {% if current_filters.max_rating %}
+                        <span class="filter-tag">Max IMDB: {{ current_filters.max_rating }}</span>
+                    {% endif %}
+                    {% if current_filters.year_from %}
+                        <span class="filter-tag">From: {{ current_filters.year_from }}</span>
+                    {% endif %}
+                    {% if current_filters.year_to %}
+                        <span class="filter-tag">To: {{ current_filters.year_to }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
+    </section>
     <!-- Main Content: Genres and Movies -->
     <main id="genres" class="main-content">
         {% if top_movies_by_genre %}

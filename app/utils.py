@@ -147,3 +147,126 @@ def format_timestamp(timestamp_str):
             return "Just now"
     except:
         return timestamp_str
+
+def get_filter_options(movies_dict):
+    """Extract all available filter options from movies"""
+    genres = set()
+    years = set()
+    rated_options = set()
+    min_imdb_rating = 10.0
+    max_imdb_rating = 0.0
+    
+    for movie in movies_dict.values():
+        # Extract genres
+        if movie.get("Genre"):
+            movie_genres = [g.strip() for g in movie.get("Genre", "").split(",")]
+            genres.update(movie_genres)
+        
+        # Extract years
+        if movie.get("Year"):
+            try:
+                year = int(movie.get("Year"))
+                years.add(year)
+            except (ValueError, TypeError):
+                pass
+        
+        # Extract content ratings
+        if movie.get("Rated"):
+            rated_options.add(movie.get("Rated"))
+        
+        # Extract IMDB rating range
+        if movie.get("imdbRating") and movie.get("imdbRating") != "N/A":
+            try:
+                rating = float(movie.get("imdbRating"))
+                min_imdb_rating = min(min_imdb_rating, rating)
+                max_imdb_rating = max(max_imdb_rating, rating)
+            except (ValueError, TypeError):
+                pass
+    
+    return {
+        "genres": sorted(list(genres)),
+        "years": sorted(list(years)),
+        "rated_options": sorted(list(rated_options)),
+        "min_imdb_rating": min_imdb_rating if min_imdb_rating != 10.0 else 0.0,
+        "max_imdb_rating": max_imdb_rating
+    }
+
+def filter_movies(movies_dict, query="", genre="", min_rating=None, max_rating=None, 
+                 year_from=None, year_to=None, rated=""):
+    """Filter movies based on various criteria"""
+    filtered_movies = []
+    
+    for movie in movies_dict.values():
+        # Text search filter
+        if query and query.lower() not in movie.get("Title", "").lower():
+            continue
+        
+        # Genre filter
+        if genre and genre not in movie.get("Genre", ""):
+            continue
+        
+        # IMDB rating filter
+        if min_rating is not None or max_rating is not None:
+            try:
+                movie_rating_str = movie.get("imdbRating", "0")
+                if movie_rating_str == "N/A":
+                    continue
+                movie_rating = float(movie_rating_str)
+                if min_rating is not None and movie_rating < min_rating:
+                    continue
+                if max_rating is not None and movie_rating > max_rating:
+                    continue
+            except (ValueError, TypeError):
+                continue
+        
+        # Year filter
+        if year_from is not None or year_to is not None:
+            try:
+                movie_year_str = movie.get("Year", "0")
+                # Handle year ranges like "2020-2021" by taking the first year
+                if "-" in movie_year_str:
+                    movie_year_str = movie_year_str.split("-")[0]
+                movie_year = int(movie_year_str)
+                if year_from is not None and movie_year < year_from:
+                    continue
+                if year_to is not None and movie_year > year_to:
+                    continue
+            except (ValueError, TypeError):
+                continue
+        
+        # Content rating filter
+        if rated and movie.get("Rated") != rated:
+            continue
+        
+        filtered_movies.append(movie)
+    
+    return filtered_movies
+
+def organize_movies_by_genre(movies_list, max_per_genre=5):
+    """Organize a list of movies by their primary genre"""
+    from collections import defaultdict
+    
+    genre_movies = defaultdict(list)
+    used_titles = set()
+    
+    # Sort movies by rating first (highest first)
+    sorted_movies = []
+    for movie in movies_list:
+        try:
+            rating = float(movie.get("imdbRating", 0))
+            sorted_movies.append((rating, movie))
+        except (ValueError, TypeError):
+            sorted_movies.append((0, movie))
+    
+    sorted_movies.sort(key=lambda x: x[0], reverse=True)
+    
+    # Group by primary genre
+    for rating, movie in sorted_movies:
+        genres = [g.strip() for g in movie.get("Genre", "").split(",") if g.strip()]
+        if genres and movie["Title"] not in used_titles:
+            primary_genre = genres[0]
+            if len(genre_movies[primary_genre]) < max_per_genre:
+                genre_movies[primary_genre].append(movie)
+                used_titles.add(movie["Title"])
+    
+    return dict(genre_movies)

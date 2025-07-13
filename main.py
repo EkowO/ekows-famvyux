@@ -19,3 +19,12 @@ app.include_router(movies_router)
 app.include_router(watch_later_router)
 app.include_router(comments_router)
 app.include_router(auth_router)
+
+# Try to import Google OAuth router, make it optional
+try:
+    from app.routes_google_auth import router as google_auth_router
+    app.include_router(google_auth_router)
+    print("✅ Google OAuth authentication enabled")
+except ImportError as e:
+    print(f"⚠️  Google OAuth authentication disabled: {e}")
+    print("   Install missing packages: pip install authlib httpx python-jose[cryptography]")

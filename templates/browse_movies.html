@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Movies{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top:30px;">
+        <h1>Browse Movies</h1>
+        
+        <!-- Advanced Filter Form -->
+        <div class="browse-filters">
+            <form method="get" action="/browse" class="advanced-filter-form">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Genre:</label>
+                        <select name="genre">
+                            <option value="">All Genres</option>
+                            {% for g in filter_options.genres %}
+                                <option value="{{ g }}" {% if current_filters.genre == g %}selected{% endif %}>{{ g }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Content Rating:</label>
+                        <select name="rated">
+                            <option value="">All Ratings</option>
+                            {% for r in filter_options.rated_options %}
+                                <option value="{{ r }}" {% if current_filters.rated == r %}selected{% endif %}>{{ r }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Min IMDB Rating:</label>
+                        <input type="number" name="min_rating" placeholder="0.0" min="0" max="10" step="0.1" value="{{ current_filters.min_rating or '' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Max IMDB Rating:</label>
+                        <input type="number" name="max_rating" placeholder="10.0" min="0" max="10" step="0.1" value="{{ current_filters.max_rating or '' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Year From:</label>
+                        <input type="number" name="year_from" placeholder="1900" min="1900" max="2030" value="{{ current_filters.year_from or '' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Year To:</label>
+                        <input type="number" name="year_to" placeholder="2030" min="1900" max="2030" value="{{ current_filters.year_to or '' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Sort By:</label>
+                        <select name="sort_by">
+                            <option value="rating" {% if current_filters.sort_by == "rating" %}selected{% endif %}>IMDB Rating</option>
+                            <option value="year" {% if current_filters.sort_by == "year" %}selected{% endif %}>Release Year</option>
+                            <option value="title" {% if current_filters.sort_by == "title" %}selected{% endif %}>Title</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button type="submit" class="apply-filters">Apply Filters</button>
+                    <a href="/browse" class="clear-filters">Clear All</a>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Active Filters Display -->
+        {% if current_filters and (current_filters.genre or current_filters.rated or current_filters.min_rating or current_filters.max_rating or current_filters.year_from or current_filters.year_to) %}
+            <div class="active-filters">
+                <span>Active filters:</span>
+                {% if current_filters.genre %}
+                    <span class="filter-tag">Genre: {{ current_filters.genre }}</span>
+                {% endif %}
+                {% if current_filters.rated %}
+                    <span class="filter-tag">Rating: {{ current_filters.rated }}</span>
+                {% endif %}
+                {% if current_filters.min_rating %}
+                    <span class="filter-tag">Min IMDB: {{ current_filters.min_rating }}</span>
+                {% endif %}
+                {% if current_filters.max_rating %}
+                    <span class="filter-tag">Max IMDB: {{ current_filters.max_rating }}</span>
+                {% endif %}
+                {% if current_filters.year_from %}
+                    <span class="filter-tag">From: {{ current_filters.year_from }}</span>
+                {% endif %}
+                {% if current_filters.year_to %}
+                    <span class="filter-tag">To: {{ current_filters.year_to }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <!-- Results -->
+        {% if movies %}
+            <div class="results-header">
+                <p class="results-count">Found {{ movies|length }} movie(s)</p>
+                <p class="sort-info">Sorted by: {{ current_filters.sort_by|title or "Rating" }}</p>
+            </div>
+            
+            <div class="movies-grid">
+                {% for movie in movies %}
+                    <a href="/movie/{{ movie.imdbID }}" class="movie-link">
+                        <div class="movie-card">
+                            <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster">
+                            <h3>{{ movie.Title }}</h3>
+                            <div class="movie-meta">
+                                <span class="movie-rating">⭐ {{ movie.imdbRating }}</span>
+                                <span class="movie-year">{{ movie.Year }}</span>
+                                {% if movie.Rated %}
+                                    <span class="movie-rated">{{ movie.Rated }}</span>
+                                {% endif %}
+                            </div>
+                            {% if movie.Genre %}
+                                <div class="movie-genre">{{ movie.Genre }}</div>
+                            {% endif %}
+                            {% if movie.Plot %}
+                                <div class="movie-plot">{{ movie.Plot[:100] }}{% if movie.Plot|length > 100 %}...{% endif %}</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>No movies found</h3>
+                <p>Try adjusting your filter criteria to see more results.</p>
+                <a href="/browse" class="btn-primary">Reset Filters</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
