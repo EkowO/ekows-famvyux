@@ -6,6 +6,49 @@
     <div class="container" style="margin-top:30px;">
         <h1>Browse Movies</h1>
         
+        <!-- AI Movie Suggestion Section -->
+        <div class="ai-suggestion-section">
+            <div class="ai-toggle-header" onclick="toggleAISection()">
+                <h2>🤖 AI Movie Assistant</h2>
+                <p>Ask our AI for personalized movie recommendations!</p>
+                <button class="ai-toggle-btn" id="aiToggleBtn">Chat with AI</button>
+            </div>
+            
+            <div class="ai-chat-container" id="aiChatContainer" style="display: none;">
+                <div class="ai-chat-header">
+                    <h3>🎬 Movie Recommendation Chat</h3>
+                    <button class="ai-close-btn" onclick="toggleAISection()">×</button>
+                </div>
+                
+                <div class="ai-chat-messages" id="aiChatMessages">
+                    <div class="ai-message">
+                        <div class="ai-avatar">🤖</div>
+                        <div class="ai-text">
+                            Hi! I'm your AI movie assistant. Tell me what kind of movie you're in the mood for, and I'll give you personalized recommendations with reasons why each one is perfect for you!
+                            <br><br>
+                            Try asking things like:
+                            <ul>
+                                <li>"I want something funny and light-hearted"</li>
+                                <li>"Suggest scary movies from the 80s"</li>
+                                <li>"I need a good action movie with great ratings"</li>
+                                <li>"What's a good romantic comedy?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-input-container">
+                    <input type="text" id="aiMessageInput" placeholder="What type of movie are you looking for?" onkeypress="handleAIKeyPress(event)">
+                    <button id="aiSendBtn" onclick="sendAIMessage()">Send</button>
+                </div>
+                
+                <div class="ai-loading" id="aiLoading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <span>Finding perfect movies for you...</span>
+                </div>
+            </div>
+        </div>
+        
         <!-- Advanced Filter Form -->
         <div class="browse-filters">
             <form method="get" action="/browse" class="advanced-filter-form">
@@ -130,4 +173,477 @@
             </div>
         {% endif %}
     </div>
+
+    <style>
+        /* AI Suggestion Styles */
+        .ai-suggestion-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .ai-toggle-header {
+            padding: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .ai-toggle-header:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .ai-toggle-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .ai-toggle-header p {
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .ai-toggle-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .ai-toggle-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .ai-chat-container {
+            background: white;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-chat-header {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-header h3 {
+            margin: 0;
+            color: #495057;
+            font-size: 18px;
+        }
+
+        .ai-close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .ai-close-btn:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            max-height: 400px;
+            min-height: 300px;
+        }
+
+        .ai-message, .user-message {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .ai-avatar, .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .ai-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .user-avatar {
+            background: #007bff;
+            color: white;
+        }
+
+        .ai-text, .user-text {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .user-text {
+            background: #007bff;
+            color: white;
+        }
+
+        .ai-text ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .ai-text li {
+            margin: 5px 0;
+        }
+
+        .movie-recommendation {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .movie-recommendation:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .movie-rec-header {
+            display: flex;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .movie-rec-poster {
+            width: 80px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .movie-rec-info {
+            flex: 1;
+        }
+
+        .movie-rec-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #495057;
+            margin: 0 0 8px 0;
+        }
+
+        .movie-rec-meta {
+            color: #6c757d;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .movie-rec-rating {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .movie-rec-why {
+            background: #e3f2fd;
+            padding: 12px 15px;
+            border-top: 1px solid #e9ecef;
+            font-style: italic;
+            color: #1976d2;
+            font-size: 14px;
+        }
+
+        .movie-rec-why::before {
+            content: "💡 Why this fits: ";
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .ai-input-container {
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-input-container input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .ai-input-container input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .ai-input-container button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .ai-input-container button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .ai-input-container button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .ai-loading {
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .match-score {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ai-chat-container {
+                max-height: 500px;
+            }
+            
+            .movie-rec-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .movie-rec-poster {
+                width: 100px;
+                height: 150px;
+            }
+            
+            .ai-text, .user-text {
+                max-width: 85%;
+            }
+        }
+    </style>
+
+    <script>
+        let conversationHistory = [];
+        let isAIOpen = false;
+
+        function toggleAISection() {
+            const container = document.getElementById('aiChatContainer');
+            const toggleBtn = document.getElementById('aiToggleBtn');
+            
+            isAIOpen = !isAIOpen;
+            
+            if (isAIOpen) {
+                container.style.display = 'flex';
+                toggleBtn.textContent = 'Close Chat';
+                document.getElementById('aiMessageInput').focus();
+            } else {
+                container.style.display = 'none';
+                toggleBtn.textContent = 'Chat with AI';
+            }
+        }
+
+        function handleAIKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendAIMessage();
+            }
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('aiMessageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Clear input and disable send button
+            input.value = '';
+            const sendBtn = document.getElementById('aiSendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            // Add user message to chat
+            addUserMessage(message);
+            
+            // Show loading
+            document.getElementById('aiLoading').style.display = 'flex';
+            
+            try {
+                // Send request to AI endpoint
+                const response = await fetch('/api/movie-suggestions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_message: message,
+                        conversation_history: conversationHistory
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to get AI response');
+                }
+                
+                const data = await response.json();
+                
+                // Add to conversation history
+                conversationHistory.push({
+                    role: 'user',
+                    content: message
+                });
+                conversationHistory.push({
+                    role: 'assistant',
+                    content: data.ai_response
+                });
+                
+                // Add AI response to chat
+                addAIMessage(data.ai_response, data.recommendations);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                addAIMessage('Sorry, I encountered an error while processing your request. Please try again!', []);
+            } finally {
+                // Hide loading and re-enable button
+                document.getElementById('aiLoading').style.display = 'none';
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+                input.focus();
+            }
+        }
+
+        function addUserMessage(message) {
+            const messagesContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'user-message';
+            messageDiv.innerHTML = `
+                <div class="user-avatar">👤</div>
+                <div class="user-text">${escapeHtml(message)}</div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addAIMessage(aiResponse, recommendations) {
+            const messagesContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'ai-message';
+            
+            let recommendationsHTML = '';
+            if (recommendations && recommendations.length > 0) {
+                recommendationsHTML = recommendations.map(rec => `
+                    <div class="movie-recommendation" onclick="window.location.href='/movie/${rec.imdb_id}'">
+                        <div class="movie-rec-header">
+                            <img src="${rec.poster}" alt="${rec.title} poster" class="movie-rec-poster" onerror="this.src='/static/no-image.png'">
+                            <div class="movie-rec-info">
+                                <h4 class="movie-rec-title">${escapeHtml(rec.title)}</h4>
+                                <div class="movie-rec-meta">
+                                    <span class="movie-rec-rating">⭐ ${rec.rating}</span> • 
+                                    <span>${rec.year}</span> • 
+                                    <span class="match-score">${rec.match_score}% match</span>
+                                </div>
+                                <div class="movie-rec-meta">
+                                    <strong>Genre:</strong> ${escapeHtml(rec.genre)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-rec-why">
+                            ${escapeHtml(rec.why_recommended)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="ai-avatar">🤖</div>
+                <div class="ai-text">
+                    ${escapeHtml(aiResponse)}
+                    ${recommendationsHTML}
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
 {% endblock %}

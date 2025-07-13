@@ -68,6 +68,21 @@ def get_all_unique_movies(movies):
             all_unique[title] = m
     return all_unique
 
+def get_all_unique_movies_list(movies):
+    """Get unique movies as a list for AI processing"""
+    all_unique = {}
+    for m in movies:
+        title = m.get("Title")
+        if (
+            title
+            and m.get("imdbRating")
+            and m.get("Poster")
+            and m.get("imdbRating") != "N/A"
+            and title not in all_unique
+        ):
+            all_unique[title] = m
+    return list(all_unique.values())
+
 def get_child_unique_movies(movies, child_ratings={"G", "PG", "PG-13"}):
     child_unique = {}
     for m in movies:
