@@ -51,6 +51,7 @@
         
         <!-- Advanced Filter Form -->
         <div class="browse-filters">
+            <h2 style="color: #f5c518; margin-bottom: 20px; font-size: 1.3em; font-weight: 700;">🔍 Filter Movies</h2>
             <form method="get" action="/browse" class="advanced-filter-form">
                 <div class="filter-grid">
                     <div class="filter-group">
@@ -135,7 +136,8 @@
             </div>
         {% endif %}
         
-        <!-- Results -->
+        <!-- Results - HIDDEN -->
+        <!-- Movie display section commented out per user request
         {% if movies %}
             <div class="results-header">
                 <p class="results-count">Found {{ movies|length }} movie(s)</p>
@@ -172,6 +174,7 @@
                 <a href="/browse" class="btn-primary">Reset Filters</a>
             </div>
         {% endif %}
+        -->
     </div>
 
     <!-- AI Chat styles are now in static/styles.css for consistency with site theme -->
