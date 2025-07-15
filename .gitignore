@@ -41,6 +41,20 @@ Thumbs.db
 *.db
 *.sqlite3
 
+# Large Data Files (GitHub size limits)
+data/get movies/all_10000_movies.json
+data/get movies/all_10000_movies_backup.json
+data/get movies/TMDB_movie_dataset_v11.csv
+data/get movies/IMDB Dataset.csv
+data/get movies/IMDB-Movie-Data.csv
+data/get movies/imdb_clean.csv
+
+# CSV Files (potentially large)
+*.csv
+
+# Large JSON files
+**/all_*_movies*.json
+
 # Logs
 *.log
 logs/
