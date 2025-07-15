@@ -42,7 +42,7 @@
                 {% for movie in found_movies %}
                     <a href="/movie/{{ movie.imdbID }}" class="movie-link">
                         <div class="movie-card">
-                            <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster">
+                            <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster" onerror="this.src='/static/no-poster.svg'; this.onerror=null;" onload="if(this.naturalWidth === 0) { this.src='/static/no-poster.svg'; }">
                             <h3>{{ movie.Title }}</h3>
                             <div class="movie-meta">
                                 <span class="movie-rating">{{ movie.imdbRating }}</span>

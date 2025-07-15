@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Placeholder</title>
+</head>
+<body>
+    <canvas id="canvas" width="140" height="210" style="border: 1px solid #ccc;"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Fill with gradient background
+        const gradient = ctx.createLinearGradient(0, 0, 140, 210);
+        gradient.addColorStop(0, '#2a2a2a');
+        gradient.addColorStop(1, '#1a1a1a');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 140, 210);
+        
+        // Add text
+        ctx.fillStyle = '#666';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('No Image', 70, 100);
+        ctx.fillText('Available', 70, 120);
+        
+        // Convert to base64 and log
+        const dataURL = canvas.toDataURL('image/png');
+        console.log('Base64 image data:', dataURL);
+    </script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container" style="margin-top:30px;">
         <div class="movie-detail-card" style="display:flex;gap:30px;align-items:flex-start;">
-            <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster" style="max-width:300px;">
+            <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster" style="max-width:300px;" onerror="this.src='/static/no-poster.svg'; this.onerror=null;" onload="if(this.naturalWidth === 0) { this.src='/static/no-poster.svg'; }">
             <div>
                 <h2>{{ movie.Title }} ({{ movie.Year }})</h2>
                 <p><strong>IMDb Rating:</strong> {{ movie.imdbRating or "N/A" }}</p>

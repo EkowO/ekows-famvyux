@@ -9,7 +9,7 @@ TMDB_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500"
 def fix_poster_url(poster_url):
     """Fix poster URLs to ensure they are complete and valid"""
     if not poster_url or poster_url == 'N/A':
-        return '/static/no-poster.svg'
+        return '/static/no-poster.png'
     
     # If it's already a full URL (like Amazon posters), return as-is
     if poster_url.startswith('http'):
@@ -20,7 +20,7 @@ def fix_poster_url(poster_url):
         return f"{TMDB_POSTER_BASE_URL}{poster_url}"
     
     # For any other case, return a fallback
-    return '/static/no-poster.svg'
+    return '/static/no-poster.png'
 
 def process_movie_posters(movies):
     """Process a list of movies to fix their poster URLs"""
@@ -97,21 +97,6 @@ def get_all_unique_movies(movies):
         if imdb_id and imdb_id not in unique_movies:
             unique_movies[imdb_id] = movie
     return list(unique_movies.values())
-
-def get_all_unique_movies_list(movies):
-    """Get unique movies as a list for AI processing"""
-    all_unique = {}
-    for m in movies:
-        title = m.get("Title")
-        if (
-            title
-            and m.get("imdbRating")
-            and m.get("Poster")
-            and m.get("imdbRating") != "N/A"
-            and title not in all_unique
-        ):
-            all_unique[title] = m
-    return list(all_unique.values())
 
 def get_child_unique_movies(movies):
     unique_movies = {}
