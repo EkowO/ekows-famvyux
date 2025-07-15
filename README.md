@@ -19,12 +19,19 @@ A modern, responsive movie database application with AI-powered recommendations 
    pip install -r requirements.txt
    ```
 
-2. **Run the Application**:
+2. **Setup Data Files**:
+   ```bash
+   python scripts/setup/setup_data_files.py
+   ```
+   
+   **Note**: Due to GitHub file size limits, large movie datasets are not included in the repository. The setup script creates sample data for testing. See [Data Setup Instructions](data/DATA_SETUP.md) for full dataset setup.
+
+3. **Run the Application**:
    ```bash
    python main.py
    ```
 
-3. **Access the Application**:
+4. **Access the Application**:
    Open your browser to `http://localhost:8000`
 
 ## Project Structure
@@ -53,8 +60,32 @@ ekows-famvyux/
 - **Authentication**: Google OAuth integration
 - **AI Features**: OpenAI integration for recommendations
 
+## Data Setup
+
+Due to GitHub's file size restrictions, large movie datasets are not included in the repository. You have several options:
+
+### Option 1: Quick Start (Recommended)
+```bash
+python scripts/setup/setup_data_files.py
+```
+This creates sample data with 3 movies for immediate testing.
+
+### Option 2: Full Dataset
+1. Download TMDB or IMDB datasets
+2. Place them in `data/get movies/` directory
+3. Run the merge scripts provided
+4. See [Data Setup Guide](data/DATA_SETUP.md) for detailed instructions
+
+### Required Data Files
+- `all_10000_movies.json` - Main movie database
+- `movie_likes.json` - User preferences
+- `watch_later.json` - Watchlists
+- `users.json` - User accounts
+- `comments.json` - Movie comments
+
 ## Documentation
 
+- [Data Setup Guide](data/DATA_SETUP.md)
 - [Setup Guide](docs/setup/)
 - [Feature Documentation](docs/features/)
 - [Troubleshooting](docs/troubleshooting/)
